@@ -25,22 +25,16 @@ data LispVal = Atom String
              | String String
              | Bool Bool
 
-parseString :: Parser LispVal
-parseString = do char '"'
-                 x <- many (noneOf "\"" <|> escapedChars)
-                 char '"'
-                 return $ String x
-
 parseAtom :: Parser LispVal
 parseAtom = do first <- letter <|> symbol
                rest <- many (letter <|> digit <|> symbol)
                return $ Atom (first:rest)
 
-parseBool :: Parser LispVal
-parseBool = do x <- try $ char '#' >> oneOf "tf"
-               case x of
-                 't' -> return $ Bool True
-                 'f' -> return $ Bool False
+parseString :: Parser LispVal
+parseString = do char '"'
+                 x <- many (noneOf "\"" <|> escapedChars)
+                 char '"'
+                 return $ String x
 
 parseNumber :: Parser LispVal
 parseNumber = do prefix <- (try $ char '#' >> oneOf "box") <|> digit
@@ -53,6 +47,12 @@ parseNumber = do prefix <- (try $ char '#' >> oneOf "box") <|> digit
                              return $ Number (fst $ (readHex numberStr) !! 0)
                    _   -> do numberStr <- many1 digit
                              return $ Number (read $ prefix:numberStr)
+
+parseBool :: Parser LispVal
+parseBool = do x <- try $ char '#' >> oneOf "tf"
+               case x of
+                 't' -> return $ Bool True
+                 'f' -> return $ Bool False
 
 bin2dig :: String -> Integer
 bin2dig input = foldl (\x y -> x * 2 + y) 0 $ map (\x -> read [x]) input
