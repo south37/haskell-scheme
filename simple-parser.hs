@@ -5,8 +5,8 @@ import Control.Monad
 symbol :: Parser Char
 symbol = oneOf  "!#$%&|*+-/:<=>?@^_~"
 
-escapedChar :: Parser Char
-escapedChar = char '\\' >> (oneOf "nrt\\\"")
+escapedChars :: Parser Char
+escapedChars = char '\\' >> (oneOf "nrt\\\"")
 
 spaces :: Parser ()
 spaces = skipMany1 space
@@ -20,7 +20,7 @@ data LispVal = Atom String
 
 parseString :: Parser LispVal
 parseString = do char '"'
-                 x <- many (noneOf "\"" <|> escapedChar)
+                 x <- many (noneOf "\"" <|> escapedChars)
                  char '"'
                  return $ String x
 
