@@ -6,7 +6,12 @@ symbol :: Parser Char
 symbol = oneOf  "!#$%&|*+-/:<=>?@^_~"
 
 escapedChars :: Parser Char
-escapedChars = char '\\' >> (oneOf "nrt\\\"")
+escapedChars = do x <- char '\\' >> (oneOf "nrt\\\"")
+                  return $ case x of
+                             'n' -> '\n'
+                             'r' -> '\r'
+                             't' -> '\t'
+                             _   -> x
 
 spaces :: Parser ()
 spaces = skipMany1 space
