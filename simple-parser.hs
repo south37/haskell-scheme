@@ -69,6 +69,7 @@ bin2dig input = foldl (\x y -> x * 2 + y) 0 $ map (\x -> read [x]) input
 data LispVal = Atom String
              | List [LispVal]
              | DottedList [LispVal] LispVal
+             | Float Float
              | Number Integer
              | String String
              | Bool Bool
@@ -78,6 +79,12 @@ parseAtom :: Parser LispVal
 parseAtom = do first <- letter <|> symbol
                rest <- many (letter <|> digit <|> symbol)
                return $ Atom (first:rest)
+
+parseFloat :: Parser LispVal
+parseFloat = try $ do x <- many1 digit
+                      dot <- char '.'
+                      y <- many1 digit
+                      return $ Float (fst $ readFloat (x ++ [dot] ++ y) !! 0)
 
 parseNumber :: Parser LispVal
 parseNumber = do prefix <- (try $ char '#' >> oneOf "box") <|> digit
@@ -157,6 +164,7 @@ parseChar = do
 parseExpr :: Parser LispVal
 parseExpr = parseAtom
         <|> parseString
+        <|> parseFloat
         <|> parseNumber
         <|> parseChar
         <|> parseBool
