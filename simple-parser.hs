@@ -163,6 +163,9 @@ parseChar = do
                       "DEL"       -> '\DEL'
                       otherwize   -> (value !! 0)
 
+parseList :: Parser LispVal
+parseList = liftM List $ sepBy parseExpr spaces
+
 parseExpr :: Parser LispVal
 parseExpr = parseAtom
         <|> parseString
