@@ -69,7 +69,7 @@ bin2dig input = foldl (\x y -> x * 2 + y) 0 $ map (\x -> read [x]) input
 data LispVal = Atom String
              | List [LispVal]
              | DottedList [LispVal] LispVal
-             | Float Float
+             | Float Double
              | Number Integer
              | String String
              | Bool Bool
