@@ -78,7 +78,7 @@ parseAtom = do first <- letter <|> symbol
 
 parseString :: Parser LispVal
 parseString = do char '"'
-                 x <- many (noneOf "\"" <|> escapedChars)
+                 x <- many (escapedChars <|> noneOf "\"")
                  char '"'
                  return $ String x
 
