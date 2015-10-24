@@ -99,7 +99,8 @@ parseChar = parseNormalChar <|> parseSpecialChar
 
 parseNormalChar :: Parser LispVal
 parseNormalChar = do try $ string "#\\"
-                     x <- (letter <|> digit <|> symbol <|> char '#')
+                     x <- anyChar
+                     notFollowedBy alphaNum
                      return $ Char x
 
 parseSpecialChar :: Parser LispVal
