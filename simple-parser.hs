@@ -69,7 +69,7 @@ data LispVal = Atom String
              | Number Integer
              | String String
              | Bool Bool
-             | Char Char
+             | Character Char
 
 parseAtom :: Parser LispVal
 parseAtom = do first <- letter <|> symbol
@@ -99,7 +99,7 @@ parseChar = do
     try $ string "#\\"
     value <- spetialChars
              <|> do { x <- anyChar; notFollowedBy alphaNum; return [x] }
-    return $ Char $ case value of
+    return $ Character $ case value of
                       "altmode"   -> '\ESC'
                       "backnext"  -> '\US'
                       "backspace" -> '\BS'
