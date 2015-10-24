@@ -5,7 +5,7 @@ import Data.Char
 import Numeric
 
 symbol :: Parser Char
-symbol = oneOf  "!#$%&|*+-/:<=>?@^_~"
+symbol = oneOf  "!$%&|*+-/:<=>?@^_~"
 
 escapedChars :: Parser Char
 escapedChars = do x <- char '\\' >> (oneOf "nrt\\\"")
@@ -34,11 +34,13 @@ parseString = do char '"'
 parseAtom :: Parser LispVal
 parseAtom = do first <- letter <|> symbol
                rest <- many (letter <|> digit <|> symbol)
-               let atom = first:rest
-               return $ case atom of
-                          "#t" -> Bool True
-                          "#f" -> Bool False
-                          _    -> Atom atom
+               return $ Atom (first:rest)
+
+parseBool :: Parser LispVal
+parseBool = do x <- try $ char '#' >> oneOf "tf"
+               case x of
+                 't' -> return $ Bool True
+                 'f' -> return $ Bool False
 
 parseNumber :: Parser LispVal
 parseNumber = do prefix <- (try $ char '#' >> oneOf "box") <|> digit
@@ -59,6 +61,7 @@ parseExpr :: Parser LispVal
 parseExpr = parseAtom
         <|> parseString
         <|> parseNumber
+        <|> parseBool
 
 readExpr :: String -> String
 readExpr input = case parse parseExpr "lisp" input of
