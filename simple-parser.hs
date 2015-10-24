@@ -25,6 +25,7 @@ spetialChars = try (string "altmode")   <|>
                try (string "return")    <|>
                try (string "rubout")    <|>
                try (string "space")     <|>
+               try (string "newline")   <|>
                try (string "tab")       <|>
                try (string "NUL")       <|>
                try (string "SOH")       <|>
@@ -125,6 +126,7 @@ parseChar = do
                       "return"    -> '\CR'
                       "rubout"    -> '\DEL'
                       "space"     -> ' '
+                      "newline"   -> '\n'
                       "tab"       -> '\HT'
                       "NUL"       -> '\NUL'
                       "SOH"       -> '\SOH'
