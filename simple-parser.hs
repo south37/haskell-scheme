@@ -15,6 +15,51 @@ escapedChars = do x <- char '\\' >> (oneOf "nrt\\\"")
                              't' -> '\t'
                              _   -> x
 
+spetialChars :: Parser String
+spetialChars = try (string "altmode")   <|>
+               try (string "backnext")  <|>
+               try (string "backspace") <|>
+               try (string "call")      <|>
+               try (string "linefeed")  <|>
+               try (string "page")      <|>
+               try (string "return")    <|>
+               try (string "rubout")    <|>
+               try (string "space")     <|>
+               try (string "tab")       <|>
+               try (string "NUL")       <|>
+               try (string "SOH")       <|>
+               try (string "STX")       <|>
+               try (string "ETX")       <|>
+               try (string "EOT")       <|>
+               try (string "ENQ")       <|>
+               try (string "ACK")       <|>
+               try (string "BEL")       <|>
+               try (string "BS")        <|>
+               try (string "HT")        <|>
+               try (string "LF")        <|>
+               try (string "VT")        <|>
+               try (string "FF")        <|>
+               try (string "CR")        <|>
+               try (string "SO")        <|>
+               try (string "SI")        <|>
+               try (string "DLE")       <|>
+               try (string "DC1")       <|>
+               try (string "DC2")       <|>
+               try (string "DC3")       <|>
+               try (string "DC4")       <|>
+               try (string "NAK")       <|>
+               try (string "SYN")       <|>
+               try (string "ETB")       <|>
+               try (string "CAN")       <|>
+               try (string "EM")        <|>
+               try (string "SUB")       <|>
+               try (string "ESC")       <|>
+               try (string "FS")        <|>
+               try (string "GS")        <|>
+               try (string "RS")        <|>
+               try (string "US")        <|>
+               try (string "DEL")
+
 spaces :: Parser ()
 spaces = skipMany1 space
 
@@ -50,54 +95,60 @@ parseNumber = do prefix <- (try $ char '#' >> oneOf "box") <|> digit
                              return $ Number (read $ prefix:numberStr)
 
 parseChar :: Parser LispVal
-parseChar = do string "#\\"
-               first <- letter <|> digit <|> symbol
-               rest <- many letter
-               case first:rest of
-                 "altmode"   -> return $ Char '\ESC'
-                 "backnext"  -> return $ Char '\US'
-                 "backspace" -> return $ Char '\BS'
-                 "call"      -> return $ Char '\SUB'
-                 "linefeed"  -> return $ Char '\LF'
-                 "page"      -> return $ Char '\FF'
-                 "return"    -> return $ Char '\CR'
-                 "rubout"    -> return $ Char '\DEL'
-                 "space"     -> return $ Char ' '
-                 "tab"       -> return $ Char '\HT'
-                 "NUL"       -> return $ Char '\NUL'
-                 "SOH"       -> return $ Char '\SOH'
-                 "STX"       -> return $ Char '\STX'
-                 "ETX"       -> return $ Char '\ETX'
-                 "EOT"       -> return $ Char '\EOT'
-                 "ENQ"       -> return $ Char '\ENQ'
-                 "ACK"       -> return $ Char '\ACK'
-                 "BEL"       -> return $ Char '\BEL'
-                 "BS"        -> return $ Char '\BS'
-                 "HT"        -> return $ Char '\HT'
-                 "LF"        -> return $ Char '\LF'
-                 "VT"        -> return $ Char '\VT'
-                 "FF"        -> return $ Char '\FF'
-                 "CR"        -> return $ Char '\CR'
-                 "SO"        -> return $ Char '\SO'
-                 "SI"        -> return $ Char '\SI'
-                 "DLE"       -> return $ Char '\DLE'
-                 "DC1"       -> return $ Char '\DC1'
-                 "DC2"       -> return $ Char '\DC2'
-                 "DC3"       -> return $ Char '\DC3'
-                 "DC4"       -> return $ Char '\DC4'
-                 "NAK"       -> return $ Char '\NAK'
-                 "SYN"       -> return $ Char '\SYN'
-                 "ETB"       -> return $ Char '\ETB'
-                 "CAN"       -> return $ Char '\CAN'
-                 "EM"        -> return $ Char '\EM'
-                 "SUB"       -> return $ Char '\SUB'
-                 "ESC"       -> return $ Char '\ESC'
-                 "FS"        -> return $ Char '\FS'
-                 "GS"        -> return $ Char '\GS'
-                 "RS"        -> return $ Char '\RS'
-                 "US"        -> return $ Char '\US'
-                 "DEL"       -> return $ Char '\DEL'
-                 _           -> case rest of [] -> return $ Char first
+parseChar = parseNormalChar <|> parseSpecialChar
+
+parseNormalChar :: Parser LispVal
+parseNormalChar = do try $ string "#\\"
+                     x <- letter
+                     return $ Char x
+
+parseSpecialChar :: Parser LispVal
+parseSpecialChar = do try $ string "#\\"
+                      x <- spetialChars
+                      case x of
+                        "altmode"   -> return $ Char '\ESC'
+                        "backnext"  -> return $ Char '\US'
+                        "backspace" -> return $ Char '\BS'
+                        "call"      -> return $ Char '\SUB'
+                        "linefeed"  -> return $ Char '\LF'
+                        "page"      -> return $ Char '\FF'
+                        "return"    -> return $ Char '\CR'
+                        "rubout"    -> return $ Char '\DEL'
+                        "space"     -> return $ Char ' '
+                        "tab"       -> return $ Char '\HT'
+                        "NUL"       -> return $ Char '\NUL'
+                        "SOH"       -> return $ Char '\SOH'
+                        "STX"       -> return $ Char '\STX'
+                        "ETX"       -> return $ Char '\ETX'
+                        "EOT"       -> return $ Char '\EOT'
+                        "ENQ"       -> return $ Char '\ENQ'
+                        "ACK"       -> return $ Char '\ACK'
+                        "BEL"       -> return $ Char '\BEL'
+                        "BS"        -> return $ Char '\BS'
+                        "HT"        -> return $ Char '\HT'
+                        "LF"        -> return $ Char '\LF'
+                        "VT"        -> return $ Char '\VT'
+                        "FF"        -> return $ Char '\FF'
+                        "CR"        -> return $ Char '\CR'
+                        "SO"        -> return $ Char '\SO'
+                        "SI"        -> return $ Char '\SI'
+                        "DLE"       -> return $ Char '\DLE'
+                        "DC1"       -> return $ Char '\DC1'
+                        "DC2"       -> return $ Char '\DC2'
+                        "DC3"       -> return $ Char '\DC3'
+                        "DC4"       -> return $ Char '\DC4'
+                        "NAK"       -> return $ Char '\NAK'
+                        "SYN"       -> return $ Char '\SYN'
+                        "ETB"       -> return $ Char '\ETB'
+                        "CAN"       -> return $ Char '\CAN'
+                        "EM"        -> return $ Char '\EM'
+                        "SUB"       -> return $ Char '\SUB'
+                        "ESC"       -> return $ Char '\ESC'
+                        "FS"        -> return $ Char '\FS'
+                        "GS"        -> return $ Char '\GS'
+                        "RS"        -> return $ Char '\RS'
+                        "US"        -> return $ Char '\US'
+                        "DEL"       -> return $ Char '\DEL'
 
 parseBool :: Parser LispVal
 parseBool = do x <- try $ char '#' >> oneOf "tf"
