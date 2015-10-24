@@ -24,6 +24,7 @@ data LispVal = Atom String
              | Number Integer
              | String String
              | Bool Bool
+             | Char Char
 
 parseAtom :: Parser LispVal
 parseAtom = do first <- letter <|> symbol
@@ -48,6 +49,56 @@ parseNumber = do prefix <- (try $ char '#' >> oneOf "box") <|> digit
                    _   -> do numberStr <- many1 digit
                              return $ Number (read $ prefix:numberStr)
 
+parseChar :: Parser LispVal
+parseChar = do string "#\\"
+               first <- letter <|> digit <|> symbol
+               rest <- many letter
+               case first:rest of
+                 "altmode"   -> return $ Char '\ESC'
+                 "backnext"  -> return $ Char '\US'
+                 "backspace" -> return $ Char '\BS'
+                 "call"      -> return $ Char '\SUB'
+                 "linefeed"  -> return $ Char '\LF'
+                 "page"      -> return $ Char '\FF'
+                 "return"    -> return $ Char '\CR'
+                 "rubout"    -> return $ Char '\DEL'
+                 "space"     -> return $ Char ' '
+                 "tab"       -> return $ Char '\HT'
+                 "NUL"       -> return $ Char '\NUL'
+                 "SOH"       -> return $ Char '\SOH'
+                 "STX"       -> return $ Char '\STX'
+                 "ETX"       -> return $ Char '\ETX'
+                 "EOT"       -> return $ Char '\EOT'
+                 "ENQ"       -> return $ Char '\ENQ'
+                 "ACK"       -> return $ Char '\ACK'
+                 "BEL"       -> return $ Char '\BEL'
+                 "BS"        -> return $ Char '\BS'
+                 "HT"        -> return $ Char '\HT'
+                 "LF"        -> return $ Char '\LF'
+                 "VT"        -> return $ Char '\VT'
+                 "FF"        -> return $ Char '\FF'
+                 "CR"        -> return $ Char '\CR'
+                 "SO"        -> return $ Char '\SO'
+                 "SI"        -> return $ Char '\SI'
+                 "DLE"       -> return $ Char '\DLE'
+                 "DC1"       -> return $ Char '\DC1'
+                 "DC2"       -> return $ Char '\DC2'
+                 "DC3"       -> return $ Char '\DC3'
+                 "DC4"       -> return $ Char '\DC4'
+                 "NAK"       -> return $ Char '\NAK'
+                 "SYN"       -> return $ Char '\SYN'
+                 "ETB"       -> return $ Char '\ETB'
+                 "CAN"       -> return $ Char '\CAN'
+                 "EM"        -> return $ Char '\EM'
+                 "SUB"       -> return $ Char '\SUB'
+                 "ESC"       -> return $ Char '\ESC'
+                 "FS"        -> return $ Char '\FS'
+                 "GS"        -> return $ Char '\GS'
+                 "RS"        -> return $ Char '\RS'
+                 "US"        -> return $ Char '\US'
+                 "DEL"       -> return $ Char '\DEL'
+                 _           -> case rest of [] -> return $ Char first
+
 parseBool :: Parser LispVal
 parseBool = do x <- try $ char '#' >> oneOf "tf"
                case x of
@@ -61,6 +112,7 @@ parseExpr :: Parser LispVal
 parseExpr = parseAtom
         <|> parseString
         <|> parseNumber
+        <|> parseChar
         <|> parseBool
 
 readExpr :: String -> String
