@@ -44,7 +44,7 @@ parseNumber :: Parser LispVal
 parseNumber = do prefix <- ((char '#' >> oneOf "box") <|> digit)
                  case prefix of
                    'b' -> do numberStr <- many1 $ oneOf "01"
-                             return $ Number (parseBin numberStr)
+                             return $ Number (bin2dig numberStr)
                    'o' -> do numberStr <- many1 $ oneOf "01234567"
                              return $ Number (extractNumber $ readOct numberStr)
                    'x' -> do numberStr <- many1 $ oneOf "0123456789abcde"
@@ -55,8 +55,8 @@ parseNumber = do prefix <- ((char '#' >> oneOf "box") <|> digit)
 extractNumber :: [(a, String)] -> a
 extractNumber ((number, _):_) = number
 
-parseBin :: String -> Integer
-parseBin input = foldl (\x y -> x * 2 + y) 0 $ map (\x -> read [x]) input
+bin2dig :: String -> Integer
+bin2dig input = foldl (\x y -> x * 2 + y) 0 $ map (\x -> read [x]) input
 
 parseExpr :: Parser LispVal
 parseExpr = parseAtom
