@@ -41,19 +41,16 @@ parseAtom = do first <- letter <|> symbol
                           _    -> Atom atom
 
 parseNumber :: Parser LispVal
-parseNumber = do prefix <- ((char '#' >> oneOf "box") <|> digit)
+parseNumber = do prefix <- (try $ char '#' >> oneOf "box") <|> digit
                  case prefix of
                    'b' -> do numberStr <- many1 $ oneOf "01"
                              return $ Number (bin2dig numberStr)
                    'o' -> do numberStr <- many1 $ oneOf "01234567"
-                             return $ Number (extractNumber $ readOct numberStr)
+                             return $ Number (fst $ (readOct numberStr) !! 0)
                    'x' -> do numberStr <- many1 $ oneOf "0123456789abcde"
-                             return $ Number (extractNumber $ readHex numberStr)
+                             return $ Number (fst $ (readHex numberStr) !! 0)
                    _   -> do numberStr <- many1 digit
                              return $ Number (read $ prefix:numberStr)
-
-extractNumber :: [(a, String)] -> a
-extractNumber ((number, _):_) = number
 
 bin2dig :: String -> Integer
 bin2dig input = foldl (\x y -> x * 2 + y) 0 $ map (\x -> read [x]) input
