@@ -171,6 +171,12 @@ parseChar = do
                       "DEL"       -> '\DEL'
                       otherwize   -> (value !! 0)
 
+parseQuoted :: Parser LispVal
+parseQuoted = do
+    char '\''
+    x <- parseExpr
+    return $ List [Atom "quote", x]
+
 parseExpr :: Parser LispVal
 parseExpr = parseAtom
         <|> parseString
@@ -178,6 +184,11 @@ parseExpr = parseAtom
         <|> parseNumber
         <|> parseChar
         <|> parseBool
+        <|> parseQuoted
+        <|> do char '('
+               x <- try parseList <|> parseDottedList
+               char ')'
+               return x
 
 readExpr :: String -> String
 readExpr input = case parse parseExpr "lisp" input of
