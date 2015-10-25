@@ -82,7 +82,7 @@ parseAtom = do first <- letter <|> symbol
                return $ Atom (first:rest)
 
 parseList :: Parser LispVal
-parseList = liftM List $ sepBy parseExpr spaces
+parseList = liftM List $ try $ sepBy parseExpr spaces
 
 parseDottedList :: Parser LispVal
 parseDottedList = do head <- endBy parseExpr spaces
@@ -186,7 +186,7 @@ parseExpr = parseAtom
         <|> parseBool
         <|> parseQuoted
         <|> do char '('
-               x <- try parseList <|> parseDottedList
+               x <- parseList <|> parseDottedList
                char ')'
                return x
 
