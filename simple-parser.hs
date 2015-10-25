@@ -297,7 +297,8 @@ primitives = [("+", numericBinop (+)),
               ("car", car),
               ("cdr", cdr),
               ("cons", cons),
-              ("eqv", eqv),
+              ("eq?", eqv),
+              ("eqv?", eqv),
               ("equal?", equal)]
 
 boolBinop :: (LispVal -> ThrowsError a) -> (a -> a -> Bool) -> [LispVal] -> ThrowsError LispVal
