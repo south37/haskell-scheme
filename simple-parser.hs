@@ -190,10 +190,26 @@ parseExpr = parseAtom
                char ')'
                return x
 
+showVal :: LispVal -> String
+showVal (String contents) = "\"" ++ contents ++ "\""
+showVal (Atom name) = name
+showVal (Float contents) = show contents
+showVal (Number contents) = show contents
+showVal (Character contents) = "#\\" ++ [contents]
+showVal (Bool True) = "#t"
+showVal (Bool False) = "#f"
+showVal (List contents) = "(" ++ unwordsList contents ++ ")"
+showVal (DottedList head tail) = "(" ++ unwordsList head ++ " . " ++ showVal tail ++ ")"
+
+instance Show LispVal where show = showVal
+
+unwordsList :: [LispVal] -> String
+unwordsList = unwords . map showVal
+
 readExpr :: String -> String
 readExpr input = case parse parseExpr "lisp" input of
     Left err -> "No match: " ++ show err
-    Right _ -> "Found valud"
+    Right val -> "Found " ++ show val
 
 main :: IO ()
 main = do args <- getArgs
