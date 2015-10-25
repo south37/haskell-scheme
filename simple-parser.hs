@@ -81,14 +81,6 @@ parseAtom = do first <- letter <|> symbol
                rest <- many (letter <|> digit <|> symbol)
                return $ Atom (first:rest)
 
-parseList :: Parser LispVal
-parseList = liftM List $ try $ sepBy parseExpr spaces
-
-parseDottedList :: Parser LispVal
-parseDottedList = do head <- endBy parseExpr spaces
-                     tail <- char '.' >> spaces >> parseExpr
-                     return $ DottedList head tail
-
 parseFloat :: Parser LispVal
 parseFloat = try $ do x <- many1 digit
                       dot <- char '.'
@@ -176,6 +168,14 @@ parseQuoted = do
     char '\''
     x <- parseExpr
     return $ List [Atom "quote", x]
+
+parseList :: Parser LispVal
+parseList = liftM List $ try $ sepBy parseExpr spaces
+
+parseDottedList :: Parser LispVal
+parseDottedList = do head <- endBy parseExpr spaces
+                     tail <- char '.' >> spaces >> parseExpr
+                     return $ DottedList head tail
 
 parseExpr :: Parser LispVal
 parseExpr = parseAtom
