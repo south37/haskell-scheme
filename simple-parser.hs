@@ -104,7 +104,7 @@ parseNumber = do prefix <- (try $ char '#' >> oneOf "box") <|> digit
                              return $ Number (fst $ (readOct numberStr) !! 0)
                    'x' -> do numberStr <- many1 $ oneOf "0123456789abcde"
                              return $ Number (fst $ (readHex numberStr) !! 0)
-                   _   -> do numberStr <- many1 digit
+                   _   -> do numberStr <- many digit
                              return $ Number (read $ prefix:numberStr)
 
 parseString :: Parser LispVal
