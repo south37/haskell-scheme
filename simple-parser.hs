@@ -12,6 +12,10 @@ data LispError = NumArgs Integer [LispVal]
                | NotFunction String String
                | UnboundVar String String
                | Default String
+instance Show LispError where show = showError
+instance Error LispError where
+    noMsg = Default "An error has occured"
+    strMsg = Default
 
 showError :: LispError -> String
 showError (UnboundVar message varname) = message ++ ": " ++ varname
@@ -22,7 +26,13 @@ showError (NumArgs expected found) = "Expected " ++ show expected
 showError (TypeMismatch expected found) = "Invalid type: expected " ++ expected
                                        ++ ", found " ++ show found
 showError (Parser parseError) = "Parse error at " ++ show parseError
-instance Show LispError where show = showError
+
+type ThrowsError = Either LispError
+
+trapError action = catchError action (return . show)
+
+extractValue :: ThrowsError a -> a
+extractValue (Right val) = val
 
 escapedChars :: Parser Char
 escapedChars = do x <- char '\\' >> (oneOf "nrt\\\"")
