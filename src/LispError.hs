@@ -24,6 +24,7 @@ data LispError = NumArgs Integer [LispVal]
                | NotFunction String String
                | UnboundVar String String
                | Default String
+
 instance Show LispError where show = showError
 instance Error LispError where
     noMsg = Default "An error has occured"
