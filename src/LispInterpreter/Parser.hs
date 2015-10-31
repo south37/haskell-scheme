@@ -1,4 +1,4 @@
-module LispInterpreter.LispParser
+module LispInterpreter.Parser
 ( parseAtom
 , parseFloat
 , parseNumber

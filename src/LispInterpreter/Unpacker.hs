@@ -1,4 +1,4 @@
-module LispInterpreter.LispUnpacker
+module LispInterpreter.Unpacker
 ( Unpacker ( AnyUnpacker )
 , unpackEquals
 ) where

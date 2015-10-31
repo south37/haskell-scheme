@@ -1,7 +1,7 @@
-module LispInterpreter.LispEvaluator ( eval ) where
+module LispInterpreter.Evaluator ( eval ) where
 
 import Control.Monad.Error
-import LispInterpreter.LispUnpacker
+import LispInterpreter.Unpacker
 import LispInterpreter.LispVal
 import LispInterpreter.LispError
 

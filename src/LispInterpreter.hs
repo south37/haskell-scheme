@@ -4,8 +4,8 @@ import Control.Monad
 import Control.Monad.Error
 
 import LispInterpreter.LispVal
-import LispInterpreter.LispParser
-import LispInterpreter.LispEvaluator
+import LispInterpreter.Parser
+import LispInterpreter.Evaluator
 import LispInterpreter.LispError
 
 extractValue :: ThrowsError a -> a
