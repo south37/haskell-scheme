@@ -1,15 +1,4 @@
-module LispInterpreter.Parser
-( parseAtom
-, parseFloat
-, parseNumber
-, parseString
-, parseBool
-, parseChar
-, parseQuoted
-, parseList
-, parseDottedList
-, parseExpr
-) where
+module LispInterpreter.Parser(parseExpr) where
 
 import qualified Control.Monad as Monad
 import qualified Numeric
@@ -36,6 +25,22 @@ import Text.ParserCombinators.Parsec
 import qualified LispInterpreter.LispVal as LispVal
 import LispInterpreter.LispVal(LispVal)
 
+parseExpr :: Parser LispVal
+parseExpr = parseAtom
+        <|> parseString
+        <|> parseFloat
+        <|> parseNumber
+        <|> parseChar
+        <|> parseBool
+        <|> parseQuoted
+        <|> do char '('
+               x <- parseList <|> parseDottedList
+               char ')'
+               return x
+
+
+-- Parser
+--------------------------------------------------------------------------------
 parseAtom :: Parser LispVal
 parseAtom = do first <- letter <|> symbol
                rest <- many (letter <|> digit <|> symbol)
@@ -48,16 +53,17 @@ parseFloat = try $ do x <- many1 digit
                       return $ LispVal.Float (fst $ Numeric.readFloat (x ++ [dot] ++ y) !! 0)
 
 parseNumber :: Parser LispVal
-parseNumber = do prefix <- (try $ char '#' >> oneOf "box") <|> digit
-                 case prefix of
-                   'b' -> do numberStr <- many1 $ oneOf "01"
-                             return $ LispVal.Number (bin2dig numberStr)
-                   'o' -> do numberStr <- many1 $ oneOf "01234567"
-                             return $ LispVal.Number (fst $ (Numeric.readOct numberStr) !! 0)
-                   'x' -> do numberStr <- many1 $ oneOf "0123456789abcde"
-                             return $ LispVal.Number (fst $ (Numeric.readHex numberStr) !! 0)
-                   _   -> do numberStr <- many digit
-                             return $ LispVal.Number (read $ prefix:numberStr)
+parseNumber =
+    do prefix <- (try $ char '#' >> oneOf "box") <|> digit
+       case prefix of
+         'b' -> do numberStr <- many1 $ oneOf "01"
+                   return $ LispVal.Number (bin2dig numberStr)
+         'o' -> do numberStr <- many1 $ oneOf "01234567"
+                   return $ LispVal.Number (fst $ (Numeric.readOct numberStr) !! 0)
+         'x' -> do numberStr <- many1 $ oneOf "0123456789abcde"
+                   return $ LispVal.Number (fst $ (Numeric.readHex numberStr) !! 0)
+         _   -> do numberStr <- many digit
+                   return $ LispVal.Number (read $ prefix:numberStr)
 
 parseString :: Parser LispVal
 parseString = do char '"'
@@ -136,19 +142,6 @@ parseDottedList :: Parser LispVal
 parseDottedList = do head <- endBy parseExpr spaces
                      tail <- char '.' >> spaces >> parseExpr
                      return $ LispVal.DottedList head tail
-
-parseExpr :: Parser LispVal
-parseExpr = parseAtom
-        <|> parseString
-        <|> parseFloat
-        <|> parseNumber
-        <|> parseChar
-        <|> parseBool
-        <|> parseQuoted
-        <|> do char '('
-               x <- parseList <|> parseDottedList
-               char ')'
-               return x
 
 
 -- Util
