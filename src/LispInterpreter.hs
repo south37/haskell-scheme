@@ -3,10 +3,10 @@ import System.Environment
 import Control.Monad
 import Control.Monad.Error
 
-import LispVal
-import LispParser
-import LispEvaluator
-import LispError
+import LispInterpreter.LispVal
+import LispInterpreter.LispParser
+import LispInterpreter.LispEvaluator
+import LispInterpreter.LispError
 
 extractValue :: ThrowsError a -> a
 extractValue (Right val) = val

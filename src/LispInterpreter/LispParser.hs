@@ -1,4 +1,4 @@
-module LispParser
+module LispInterpreter.LispParser
 ( parseAtom
 , parseFloat
 , parseNumber
@@ -14,7 +14,7 @@ module LispParser
 import Control.Monad
 import Numeric
 import Text.ParserCombinators.Parsec hiding (spaces)
-import LispVal
+import LispInterpreter.LispVal
 
 parseAtom :: Parser LispVal
 parseAtom = do first <- letter <|> symbol

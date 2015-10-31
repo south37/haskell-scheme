@@ -1,11 +1,11 @@
-module LispUnpacker
+module LispInterpreter.LispUnpacker
 ( Unpacker ( AnyUnpacker )
 , unpackEquals
 ) where
 
 import Control.Monad.Error
-import LispVal
-import LispError
+import LispInterpreter.LispVal
+import LispInterpreter.LispError
 
 data Unpacker = forall a. Eq a => AnyUnpacker (LispVal -> ThrowsError a)
 

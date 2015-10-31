@@ -1,4 +1,4 @@
-module LispError
+module LispInterpreter.LispError
 ( LispError
   ( NumArgs
   , TypeMismatch
@@ -15,7 +15,7 @@ module LispError
 
 import Text.ParserCombinators.Parsec hiding (spaces)
 import Control.Monad.Error
-import LispVal
+import LispInterpreter.LispVal
 
 data LispError = NumArgs Integer [LispVal]
                | TypeMismatch String LispVal

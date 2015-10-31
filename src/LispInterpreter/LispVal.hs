@@ -1,4 +1,4 @@
-module LispVal
+module LispInterpreter.LispVal
 ( LispVal
   ( Atom
   , List
