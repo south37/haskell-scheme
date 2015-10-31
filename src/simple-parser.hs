@@ -1,9 +1,13 @@
 import Text.ParserCombinators.Parsec hiding (spaces)
 import System.Environment
+import System.IO
 import Control.Monad
 import Data.Char
 import Numeric
 import Control.Monad.Error
+
+import LispError
+import LispVal
 
 data Unpacker = forall a. Eq a => AnyUnpacker (LispVal -> ThrowsError a)
 
@@ -21,32 +25,6 @@ equal [arg1, arg2] = do
     eqvEquals <- eqv [arg1, arg2]
     return $ Bool $ (primitiveEquals || let (Bool x) = eqvEquals in x)
 equal badArgList = throwError $ NumArgs 2 badArgList
-
-data LispError = NumArgs Integer [LispVal]
-               | TypeMismatch String LispVal
-               | Parser ParseError
-               | BadSpecialForm String LispVal
-               | NotFunction String String
-               | UnboundVar String String
-               | Default String
-instance Show LispError where show = showError
-instance Error LispError where
-    noMsg = Default "An error has occured"
-    strMsg = Default
-
-showError :: LispError -> String
-showError (UnboundVar message varname) = message ++ ": " ++ varname
-showError (BadSpecialForm message form) = message ++ ": " ++ show form
-showError (NotFunction message func) = message ++ ": " ++ show func
-showError (NumArgs expected found) = "Expected " ++ show expected
-                                  ++ " args; found values " ++ unwordsList found
-showError (TypeMismatch expected found) = "Invalid type: expected " ++ expected
-                                       ++ ", found " ++ show found
-showError (Parser parseError) = "Parse error at " ++ show parseError
-
-type ThrowsError = Either LispError
-
-trapError action = catchError action (return . show)
 
 extractValue :: ThrowsError a -> a
 extractValue (Right val) = val
@@ -113,15 +91,6 @@ symbol = oneOf  "!$%&|*+-/:<=>?@^_~"
 
 bin2dig :: String -> Integer
 bin2dig input = foldl (\x y -> x * 2 + y) 0 $ map (\x -> read [x]) input
-
-data LispVal = Atom String
-             | List [LispVal]
-             | DottedList [LispVal] LispVal
-             | Float Double
-             | Number Integer
-             | String String
-             | Bool Bool
-             | Character Char
 
 parseAtom :: Parser LispVal
 parseAtom = do first <- letter <|> symbol
@@ -236,22 +205,6 @@ parseExpr = parseAtom
                x <- parseList <|> parseDottedList
                char ')'
                return x
-
-showVal :: LispVal -> String
-showVal (String contents) = "\"" ++ contents ++ "\""
-showVal (Atom name) = name
-showVal (Float contents) = show contents
-showVal (Number contents) = show contents
-showVal (Character contents) = "#\\" ++ [contents]
-showVal (Bool True) = "#t"
-showVal (Bool False) = "#f"
-showVal (List contents) = "(" ++ unwordsList contents ++ ")"
-showVal (DottedList head tail) = "(" ++ unwordsList head ++ " . " ++ showVal tail ++ ")"
-
-instance Show LispVal where show = showVal
-
-unwordsList :: [LispVal] -> String
-unwordsList = unwords . map showVal
 
 eval :: LispVal -> ThrowsError LispVal
 eval val@(String _) = return val
