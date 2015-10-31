@@ -1,8 +1,6 @@
 import Text.ParserCombinators.Parsec hiding (spaces)
 import System.Environment
-import System.IO
 import Control.Monad
-import Data.Char
 import Control.Monad.Error
 
 import LispVal
