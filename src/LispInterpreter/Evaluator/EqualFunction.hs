@@ -8,7 +8,7 @@ import qualified Control.Monad.Error as Error
 import qualified LispInterpreter.LispError as LispError
 import qualified LispInterpreter.LispVal as LispVal
 import LispInterpreter.LispVal(LispVal)
-import qualified LispInterpreter.Unpacker as Unpacker
+import qualified LispInterpreter.Evaluator.Unpacker as Unpacker
 
 eqv :: [LispVal] -> LispError.ThrowsError LispVal
 eqv [(LispVal.Bool arg1), (LispVal.Bool arg2)] = return $ LispVal.Bool $ arg1 == arg2

@@ -1,4 +1,4 @@
-module LispInterpreter.Unpacker
+module LispInterpreter.Evaluator.Unpacker
 ( Unpacker ( AnyUnpacker )
 , unpackBool
 , unpackEquals

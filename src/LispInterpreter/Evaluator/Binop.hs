@@ -10,7 +10,7 @@ import qualified Control.Monad.Error as Error
 import qualified LispInterpreter.LispError as LispError
 import qualified LispInterpreter.LispVal as LispVal
 import LispInterpreter.LispVal(LispVal)
-import qualified LispInterpreter.Unpacker as Unpacker
+import qualified LispInterpreter.Evaluator.Unpacker as Unpacker
 
 numericBinop :: (Integer -> Integer -> Integer) -> [LispVal] -> LispError.ThrowsError LispVal
 numericBinop op singleVal@[_] = Error.throwError $ LispError.NumArgs 2 singleVal
