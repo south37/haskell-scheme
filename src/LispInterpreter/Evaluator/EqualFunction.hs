@@ -11,13 +11,19 @@ import LispInterpreter.LispVal(LispVal)
 import qualified LispInterpreter.Evaluator.Unpacker as Unpacker
 
 eqv :: [LispVal] -> LispError.ThrowsError LispVal
-eqv [(LispVal.Bool arg1), (LispVal.Bool arg2)] = return $ LispVal.Bool $ arg1 == arg2
-eqv [(LispVal.Number arg1), (LispVal.Number arg2)] = return $ LispVal.Bool $ arg1 == arg2
-eqv [(LispVal.String arg1), (LispVal.String arg2)] = return $ LispVal.Bool $ arg1 == arg2
-eqv [(LispVal.Atom arg1), (LispVal.Atom arg2)] = return $ LispVal.Bool $ arg1 == arg2
-eqv [(LispVal.DottedList xs x), (LispVal.DottedList ys y)] = eqv [LispVal.List $ xs ++ [x], LispVal.List $ ys ++ [y]]
-eqv [(LispVal.List arg1), (LispVal.List arg2)] = return $ LispVal.Bool $ (length arg1 == length arg2) &&
-                                                    (all eqvPair $ zip arg1 arg2)
+eqv [(LispVal.Bool arg1), (LispVal.Bool arg2)] =
+    return $ LispVal.Bool $ arg1 == arg2
+eqv [(LispVal.Number arg1), (LispVal.Number arg2)] =
+    return $ LispVal.Bool $ arg1 == arg2
+eqv [(LispVal.String arg1), (LispVal.String arg2)] =
+    return $ LispVal.Bool $ arg1 == arg2
+eqv [(LispVal.Atom arg1), (LispVal.Atom arg2)] =
+    return $ LispVal.Bool $ arg1 == arg2
+eqv [(LispVal.DottedList xs x), (LispVal.DottedList ys y)] =
+    eqv [LispVal.List $ xs ++ [x], LispVal.List $ ys ++ [y]]
+eqv [(LispVal.List arg1), (LispVal.List arg2)] =
+    return $ LispVal.Bool $ (length arg1 == length arg2) &&
+       (all eqvPair $ zip arg1 arg2)
     where eqvPair (x1, x2) = case eqv [x1, x2] of
                               Left err -> False
                               Right (LispVal.Bool val) -> val

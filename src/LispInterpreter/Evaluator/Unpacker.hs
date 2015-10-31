@@ -26,10 +26,12 @@ unpackEquals arg1 arg2 (AnyUnpacker unpacker) =
 
 unpackNum :: LispVal -> LispError.ThrowsError Integer
 unpackNum (LispVal.Number n) = return n
-unpackNum (LispVal.String n) = let parsed = reads n in
-                           if null parsed
-                               then Error.throwError $ LispError.TypeMismatch "number" $ LispVal.String n
-                               else return $ fst $ parsed !! 0
+unpackNum (LispVal.String n) =
+    let parsed = reads n in
+        if null parsed
+           then Error.throwError
+                $ LispError.TypeMismatch "number" $ LispVal.String n
+           else return $ fst $ parsed !! 0
 unpackNum (LispVal.List [n]) = unpackNum n
 unpackNum notNum = Error.throwError $ LispError.TypeMismatch "number" notNum
 
