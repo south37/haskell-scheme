@@ -1,4 +1,4 @@
-module LispInterpreter.Parser(parseExpr) where
+module LispInterpreter.Parser ( parseExpr ) where
 
 import qualified Control.Monad as Monad
 import qualified Numeric
