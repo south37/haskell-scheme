@@ -7,7 +7,7 @@ import qualified Control.Monad as Monad
 import qualified Control.Monad.Error as Error
 import qualified LispInterpreter.LispError as LispError
 import qualified LispInterpreter.LispVal as LispVal
-import LispInterpreter.LispVal(LispVal)
+import           LispInterpreter.LispVal (LispVal)
 import qualified LispInterpreter.Evaluator.Unpacker as Unpacker
 
 eqv :: [LispVal] -> LispError.ThrowsError LispVal

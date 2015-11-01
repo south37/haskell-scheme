@@ -13,10 +13,10 @@ module LispInterpreter.LispError
 , trapError
 ) where
 
-import qualified Text.ParserCombinators.Parsec as Parsec
 import qualified Control.Monad.Error as Error
+import qualified Text.ParserCombinators.Parsec as Parsec
 import qualified LispInterpreter.LispVal as LispVal
-import LispInterpreter.LispVal(LispVal)
+import           LispInterpreter.LispVal (LispVal)
 
 data LispError = NumArgs Integer [LispVal]
                | TypeMismatch String LispVal

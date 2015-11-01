@@ -7,7 +7,7 @@ module LispInterpreter.Evaluator.ListFunction
 import qualified Control.Monad.Error as Error
 import qualified LispInterpreter.LispError as LispError
 import qualified LispInterpreter.LispVal as LispVal
-import LispInterpreter.LispVal(LispVal)
+import           LispInterpreter.LispVal (LispVal)
 
 car :: [LispVal] -> LispError.ThrowsError LispVal
 car [LispVal.List (x : xs)] = return x

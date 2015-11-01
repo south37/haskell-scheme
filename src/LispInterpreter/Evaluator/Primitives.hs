@@ -1,7 +1,7 @@
 module LispInterpreter.Evaluator.Primitives ( primitives ) where
 
 import qualified LispInterpreter.LispError as LispError
-import LispInterpreter.LispVal(LispVal)
+import           LispInterpreter.LispVal (LispVal)
 import qualified LispInterpreter.Evaluator.Binop as Binop
 import qualified LispInterpreter.Evaluator.ListFunction as ListFunction
 import qualified LispInterpreter.Evaluator.EqualFunction as EqualFunction

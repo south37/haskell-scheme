@@ -3,7 +3,7 @@ module LispInterpreter.Evaluator ( eval ) where
 import qualified Control.Monad.Error as Error
 import qualified LispInterpreter.LispError as LispError
 import qualified LispInterpreter.LispVal as LispVal
-import LispInterpreter.LispVal(LispVal)
+import           LispInterpreter.LispVal (LispVal)
 import qualified LispInterpreter.Evaluator.Primitives as Primitives
 
 apply :: String -> [LispVal] -> LispError.ThrowsError LispVal

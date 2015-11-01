@@ -2,28 +2,27 @@ module LispInterpreter.Parser ( parseExpr ) where
 
 import qualified Control.Monad as Monad
 import qualified Numeric
-import qualified Text.ParserCombinators.Parsec
-import Text.ParserCombinators.Parsec
-       ( Parser
-       , alphaNum
-       , anyChar
-       , char
-       , digit
-       , endBy
-       , letter
-       , many
-       , many1
-       , noneOf
-       , notFollowedBy
-       , oneOf
-       , sepBy
-       , skipMany1
-       , space
-       , string
-       , try
-       , (<|>))
+import           Text.ParserCombinators.Parsec
+                 ( Parser
+                 , alphaNum
+                 , anyChar
+                 , char
+                 , digit
+                 , endBy
+                 , letter
+                 , many
+                 , many1
+                 , noneOf
+                 , notFollowedBy
+                 , oneOf
+                 , sepBy
+                 , skipMany1
+                 , space
+                 , string
+                 , try
+                 , (<|>))
 import qualified LispInterpreter.LispVal as LispVal
-import LispInterpreter.LispVal(LispVal)
+import           LispInterpreter.LispVal (LispVal)
 
 parseExpr :: Parser LispVal
 parseExpr = parseAtom

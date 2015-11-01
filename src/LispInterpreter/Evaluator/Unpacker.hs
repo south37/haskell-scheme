@@ -8,7 +8,7 @@ module LispInterpreter.Evaluator.Unpacker
 
 import qualified Control.Monad.Error as Error
 import qualified LispInterpreter.LispVal as LispVal
-import LispInterpreter.LispVal(LispVal)
+import           LispInterpreter.LispVal (LispVal)
 import qualified LispInterpreter.LispError as LispError
 
 data Unpacker = forall a. Eq a => AnyUnpacker (LispVal -> LispError.ThrowsError a)

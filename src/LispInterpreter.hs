@@ -3,7 +3,7 @@ import qualified System.Environment as Environment
 import qualified Control.Monad as Monad
 import qualified Control.Monad.Error as Error
 
-import LispInterpreter.LispVal(LispVal)
+import           LispInterpreter.LispVal (LispVal)
 import qualified LispInterpreter.Parser as Parser
 import qualified LispInterpreter.Evaluator as Evaluator
 import qualified LispInterpreter.LispError as LispError
