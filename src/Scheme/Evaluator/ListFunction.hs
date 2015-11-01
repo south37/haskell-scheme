@@ -1,13 +1,13 @@
-module LispInterpreter.Evaluator.ListFunction
+module Scheme.Evaluator.ListFunction
 ( car
 , cdr
 , cons
 ) where
 
 import qualified Control.Monad.Error as Error
-import qualified LispInterpreter.LispError as LispError
-import qualified LispInterpreter.LispVal as LispVal
-import           LispInterpreter.LispVal (LispVal)
+import qualified Scheme.LispError as LispError
+import qualified Scheme.LispVal as LispVal
+import           Scheme.LispVal (LispVal)
 
 car :: [LispVal] -> LispError.ThrowsError LispVal
 car [LispVal.List (x : xs)] = return x

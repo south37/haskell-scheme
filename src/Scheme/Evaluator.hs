@@ -1,10 +1,10 @@
-module LispInterpreter.Evaluator ( eval ) where
+module Scheme.Evaluator ( eval ) where
 
 import qualified Control.Monad.Error as Error
-import qualified LispInterpreter.LispError as LispError
-import qualified LispInterpreter.LispVal as LispVal
-import           LispInterpreter.LispVal (LispVal)
-import qualified LispInterpreter.Evaluator.Primitives as Primitives
+import qualified Scheme.LispError as LispError
+import qualified Scheme.LispVal as LispVal
+import           Scheme.LispVal (LispVal)
+import qualified Scheme.Evaluator.Primitives as Primitives
 
 apply :: String -> [LispVal] -> LispError.ThrowsError LispVal
 apply func args = maybe (Error.throwError $ LispError.NotFunction "Unrecognized primitive function args" func)

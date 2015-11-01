@@ -1,4 +1,4 @@
-module LispInterpreter.Parser ( parseExpr ) where
+module Scheme.Parser ( parseExpr ) where
 
 import qualified Control.Monad as Monad
 import qualified Numeric
@@ -21,8 +21,8 @@ import           Text.ParserCombinators.Parsec
                  , string
                  , try
                  , (<|>))
-import qualified LispInterpreter.LispVal as LispVal
-import           LispInterpreter.LispVal (LispVal)
+import qualified Scheme.LispVal as LispVal
+import           Scheme.LispVal (LispVal)
 
 parseExpr :: Parser LispVal
 parseExpr = parseAtom

@@ -1,14 +1,14 @@
-module LispInterpreter.Evaluator.EqualFunction
+module Scheme.Evaluator.EqualFunction
 ( eqv
 , equal
 ) where
 
 import qualified Control.Monad as Monad
 import qualified Control.Monad.Error as Error
-import qualified LispInterpreter.LispError as LispError
-import qualified LispInterpreter.LispVal as LispVal
-import           LispInterpreter.LispVal (LispVal)
-import qualified LispInterpreter.Evaluator.Unpacker as Unpacker
+import qualified Scheme.LispError as LispError
+import qualified Scheme.LispVal as LispVal
+import           Scheme.LispVal (LispVal)
+import qualified Scheme.Evaluator.Unpacker as Unpacker
 
 eqv :: [LispVal] -> LispError.ThrowsError LispVal
 eqv [left, right] =

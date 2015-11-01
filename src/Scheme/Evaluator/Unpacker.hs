@@ -1,4 +1,4 @@
-module LispInterpreter.Evaluator.Unpacker
+module Scheme.Evaluator.Unpacker
 ( Unpacker ( AnyUnpacker )
 , unpackBool
 , unpackEquals
@@ -7,9 +7,9 @@ module LispInterpreter.Evaluator.Unpacker
 ) where
 
 import qualified Control.Monad.Error as Error
-import qualified LispInterpreter.LispVal as LispVal
-import           LispInterpreter.LispVal (LispVal)
-import qualified LispInterpreter.LispError as LispError
+import qualified Scheme.LispVal as LispVal
+import           Scheme.LispVal (LispVal)
+import qualified Scheme.LispError as LispError
 
 data Unpacker = forall a. Eq a => AnyUnpacker (LispVal -> LispError.ThrowsError a)
 

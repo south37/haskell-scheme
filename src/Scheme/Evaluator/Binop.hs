@@ -1,4 +1,4 @@
-module LispInterpreter.Evaluator.Binop
+module Scheme.Evaluator.Binop
 ( numericBinop
 , boolBinop
 , boolBoolBinop
@@ -7,10 +7,10 @@ module LispInterpreter.Evaluator.Binop
 ) where
 
 import qualified Control.Monad.Error as Error
-import qualified LispInterpreter.LispError as LispError
-import qualified LispInterpreter.LispVal as LispVal
-import           LispInterpreter.LispVal (LispVal)
-import qualified LispInterpreter.Evaluator.Unpacker as Unpacker
+import qualified Scheme.LispError as LispError
+import qualified Scheme.LispVal as LispVal
+import           Scheme.LispVal (LispVal)
+import qualified Scheme.Evaluator.Unpacker as Unpacker
 
 numericBinop :: (Integer -> Integer -> Integer)
                 -> [LispVal] -> LispError.ThrowsError LispVal

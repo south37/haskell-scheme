@@ -1,10 +1,10 @@
-module LispInterpreter.Evaluator.Primitives ( primitives ) where
+module Scheme.Evaluator.Primitives ( primitives ) where
 
-import qualified LispInterpreter.LispError as LispError
-import           LispInterpreter.LispVal (LispVal)
-import qualified LispInterpreter.Evaluator.Binop as Binop
-import qualified LispInterpreter.Evaluator.ListFunction as ListFunction
-import qualified LispInterpreter.Evaluator.EqualFunction as EqualFunction
+import qualified Scheme.LispError as LispError
+import           Scheme.LispVal (LispVal)
+import qualified Scheme.Evaluator.Binop as Binop
+import qualified Scheme.Evaluator.ListFunction as ListFunction
+import qualified Scheme.Evaluator.EqualFunction as EqualFunction
 
 primitives :: [(String, [LispVal] -> LispError.ThrowsError LispVal)]
 primitives = [("+", Binop.numericBinop (+)),
