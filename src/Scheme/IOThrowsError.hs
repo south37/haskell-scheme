@@ -1,5 +1,7 @@
 module Scheme.IOThrowsError
 ( IOThrowsError
+, liftThrows
+, runIOThrows
 ) where
 
 import qualified Control.Monad.Error as Error

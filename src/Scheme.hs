@@ -6,5 +6,5 @@ main :: IO ()
 main = do args <- Environment.getArgs
           case length args of
             0 ->         Repl.runRepl
-            1 ->         Interpreter.evalAndPrint $ args !! 0
+            1 ->         Interpreter.runOne $ args !! 0
             otherwise -> putStrLn "Program takes only 0 or 1 argument"

@@ -1,6 +1,8 @@
 module Scheme.Env
 ( Env
 , defineVar
+, getVar
+, nullEnv
 , setVar
 ) where
 
