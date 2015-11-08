@@ -6,11 +6,10 @@ module Scheme.Interpreter
 import qualified Text.ParserCombinators.Parsec as Parsec
 import qualified Control.Monad as Monad
 import qualified Control.Monad.Error as Error
-
 import qualified Scheme.Env as Env
+import qualified Scheme.Evaluator as Evaluator
 import qualified Scheme.IOThrowsError as IOThrowsError
 import qualified Scheme.Parser as Parser
-import qualified Scheme.Evaluator as Evaluator
 import qualified Scheme.Type as Type
 import           Scheme.Type (Env, LispVal, ThrowsError)
 

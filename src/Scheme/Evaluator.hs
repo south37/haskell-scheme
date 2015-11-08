@@ -3,10 +3,10 @@ module Scheme.Evaluator ( eval ) where
 import qualified Control.Monad as Monad
 import qualified Control.Monad.Error as Error
 import qualified Scheme.Env as Env
+import qualified Scheme.Evaluator.Primitives as Primitives
 import qualified Scheme.IOThrowsError as IOThrowsError
 import           Scheme.IOThrowsError (IOThrowsError)
 import qualified Scheme.LispError as LispError
-import qualified Scheme.Evaluator.Primitives as Primitives
 import qualified Scheme.Type as Type
 import           Scheme.Type (Env, LispVal)
 

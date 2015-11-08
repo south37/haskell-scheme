@@ -1,8 +1,8 @@
 module Scheme.Evaluator.Primitives ( primitives ) where
 
 import qualified Scheme.Evaluator.Binop as Binop
-import qualified Scheme.Evaluator.ListFunction as ListFunction
 import qualified Scheme.Evaluator.EqualFunction as EqualFunction
+import qualified Scheme.Evaluator.ListFunction as ListFunction
 import           Scheme.Type (LispVal, ThrowsError)
 
 primitives :: [(String, [LispVal] -> ThrowsError LispVal)]
