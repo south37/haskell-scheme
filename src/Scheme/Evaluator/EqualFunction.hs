@@ -6,10 +6,10 @@ module Scheme.Evaluator.EqualFunction
 import qualified Control.Monad as Monad
 import qualified Control.Monad.Error as Error
 import qualified Scheme.Type as Type
-import           Scheme.Type (LispVal)
+import           Scheme.Type (LispVal, ThrowsError)
 import qualified Scheme.Evaluator.Unpacker as Unpacker
 
-eqv :: [LispVal] -> Type.ThrowsError LispVal
+eqv :: [LispVal] -> ThrowsError LispVal
 eqv [left, right] =
     case [left, right] of
          [(Type.Bool arg1), (Type.Bool arg2)] ->
@@ -31,7 +31,7 @@ eqv [left, right] =
          [_, _] -> return $ Type.Bool False
 eqv badArgList = Error.throwError $ Type.NumArgs 2 badArgList
 
-equal :: [LispVal] -> Type.ThrowsError LispVal
+equal :: [LispVal] -> ThrowsError LispVal
 equal [arg1, arg2] = do
     primitiveEquals <- Monad.liftM or $ mapM (Unpacker.unpackEquals arg1 arg2)
                        [ Unpacker.AnyUnpacker Unpacker.unpackNum

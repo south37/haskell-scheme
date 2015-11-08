@@ -4,9 +4,9 @@ module Scheme.LispError
 ) where
 
 import qualified Control.Monad.Error as Error
-import qualified Scheme.Type as Type
+import           Scheme.Type (ThrowsError)
 
-extractValue :: Type.ThrowsError a -> a
+extractValue :: ThrowsError a -> a
 extractValue (Right val) = val
 
 trapError action = Error.catchError action (return . show)

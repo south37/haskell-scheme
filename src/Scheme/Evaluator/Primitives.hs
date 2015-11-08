@@ -3,10 +3,9 @@ module Scheme.Evaluator.Primitives ( primitives ) where
 import qualified Scheme.Evaluator.Binop as Binop
 import qualified Scheme.Evaluator.ListFunction as ListFunction
 import qualified Scheme.Evaluator.EqualFunction as EqualFunction
-import qualified Scheme.Type as Type
-import           Scheme.Type (LispVal)
+import           Scheme.Type (LispVal, ThrowsError)
 
-primitives :: [(String, [LispVal] -> Type.ThrowsError LispVal)]
+primitives :: [(String, [LispVal] -> ThrowsError LispVal)]
 primitives = [("+", Binop.numericBinop (+)),
               ("-", Binop.numericBinop (-)),
               ("*", Binop.numericBinop (*)),

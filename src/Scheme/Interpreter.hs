@@ -12,7 +12,7 @@ import qualified Scheme.IOThrowsError as IOThrowsError
 import qualified Scheme.Parser as Parser
 import qualified Scheme.Evaluator as Evaluator
 import qualified Scheme.Type as Type
-import           Scheme.Type (Env, LispVal)
+import           Scheme.Type (Env, LispVal, ThrowsError)
 
 evalAndPrint :: Env -> String -> IO ()
 evalAndPrint env expr = evalString env expr >>= putStrLn
@@ -22,7 +22,7 @@ evalString env expr =
     let evaled = (IOThrowsError.liftThrows $ readExpr expr) >>= Evaluator.eval env
     in IOThrowsError.runIOThrows (Monad.liftM show evaled)
 
-readExpr :: String -> Type.ThrowsError LispVal
+readExpr :: String -> ThrowsError LispVal
 readExpr input = case Parsec.parse Parser.parseExpr "lisp" input of
     Left err -> Error.throwError $ Type.Parser err
     Right val -> return val

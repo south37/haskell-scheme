@@ -8,23 +8,23 @@ module Scheme.Evaluator.Unpacker
 
 import qualified Control.Monad.Error as Error
 import qualified Scheme.Type as Type
-import           Scheme.Type (LispVal)
+import           Scheme.Type (LispVal, ThrowsError)
 import qualified Scheme.LispError as LispError
 
-data Unpacker = forall a. Eq a => AnyUnpacker (LispVal -> Type.ThrowsError a)
+data Unpacker = forall a. Eq a => AnyUnpacker (LispVal -> ThrowsError a)
 
-unpackBool :: LispVal -> Type.ThrowsError Bool
+unpackBool :: LispVal -> ThrowsError Bool
 unpackBool (Type.Bool b) = return b
 unpackBool notBool = Error.throwError $ Type.TypeMismatch "boolean" notBool
 
-unpackEquals :: LispVal -> LispVal -> Unpacker -> Type.ThrowsError Bool
+unpackEquals :: LispVal -> LispVal -> Unpacker -> ThrowsError Bool
 unpackEquals arg1 arg2 (AnyUnpacker unpacker) =
              do unpacked1 <- unpacker arg1
                 unpacked2 <- unpacker arg2
                 return $ unpacked1 == unpacked2
          `Error.catchError` (const $ return False)
 
-unpackNum :: LispVal -> Type.ThrowsError Integer
+unpackNum :: LispVal -> ThrowsError Integer
 unpackNum (Type.Number n) = return n
 unpackNum (Type.String n) =
     let parsed = reads n in
@@ -35,7 +35,7 @@ unpackNum (Type.String n) =
 unpackNum (Type.List [n]) = unpackNum n
 unpackNum notNum = Error.throwError $ Type.TypeMismatch "number" notNum
 
-unpackStr :: LispVal -> Type.ThrowsError String
+unpackStr :: LispVal -> ThrowsError String
 unpackStr (Type.String s) = return s
 unpackStr (Type.Number s) = return $ show s
 unpackStr (Type.Bool s) = return $ show s

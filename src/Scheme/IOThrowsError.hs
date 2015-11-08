@@ -6,12 +6,11 @@ module Scheme.IOThrowsError
 
 import qualified Control.Monad.Error as Error
 import qualified Scheme.LispError as LispError
-import qualified Scheme.Type as Type
-import           Scheme.Type (LispError)
+import           Scheme.Type (LispError, ThrowsError)
 
 type IOThrowsError = Error.ErrorT LispError IO
 
-liftThrows :: Type.ThrowsError a -> IOThrowsError a
+liftThrows :: ThrowsError a -> IOThrowsError a
 liftThrows (Left err) = Error.throwError err
 liftThrows (Right val) = return val
 
