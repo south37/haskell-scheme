@@ -8,9 +8,9 @@ module Scheme.LispError
   , UnboundVar
   , Default
   )
+, ThrowsError
 , extractValue
 , showError
-, ThrowsError
 , trapError
 ) where
 
@@ -32,6 +32,8 @@ instance Error.Error LispError where
     noMsg = Default "An error has occured"
     strMsg = Default
 
+type ThrowsError = Either LispError
+
 extractValue :: ThrowsError a -> a
 extractValue (Right val) = val
 
@@ -45,8 +47,6 @@ showError (NumArgs expected found) =
 showError (TypeMismatch expected found) = "Invalid type: expected " ++ expected
                                        ++ ", found " ++ show found
 showError (Parser parseError) = "Parse error at " ++ show parseError
-
-type ThrowsError = Either LispError
 
 trapError action = Error.catchError action (return . show)
 
