@@ -10,10 +10,19 @@ import qualified Scheme.LispVal as LispVal
 import           Scheme.LispVal (LispVal)
 import qualified Scheme.Evaluator.Primitives as Primitives
 
-apply :: String -> [LispVal] -> LispError.ThrowsError LispVal
-apply func args = maybe (Error.throwError $ LispError.NotFunction "Unrecognized primitive function args" func)
-                        ($ args)
-                        (lookup func Primitives.primitives)
+apply :: [LispVal] -> [LispVal] -> IOThrowsError LispVal
+apply (PrimitiveFunc func) args = IOThrowsError.liftThrows $ func args
+apply (Func params varargs body closure) args =
+    if num params /= sumargs && varargs == Nothing
+      then throwError $ LispError.NumArgs  (num params) args
+      else (liftIO $ Env.bindVars closure $ zip params args) >>=
+           bindVarArgs varargs >>= evalBody
+    where remainingArgs = drop (length params) args
+          num = toInteger . length
+          evalBody env = Monad.liftM last $ Monad.mapM (eval env) body
+          bindVarArgs arg env = case arg of
+              Just argName -> liftIO $ bindVars env [(argName, List $ remainingArgs)]
+              Nothing -> return env
 
 eval :: Env -> LispVal -> IOThrowsError LispVal
 eval env val@(LispVal.String _) = return val

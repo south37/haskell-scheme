@@ -29,5 +29,5 @@ readExpr input = case Parsec.parse Parser.parseExpr "lisp" input of
     Right val -> return val
 
 runOne :: String -> IO ()
-runOne expr = Env.nullEnv >>= flip evalAndPrint expr
+runOne expr = Env.primitiveBindings >>= flip evalAndPrint expr
 

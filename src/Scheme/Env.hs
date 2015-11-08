@@ -3,6 +3,7 @@ module Scheme.Env
 , defineVar
 , getVar
 , nullEnv
+, primitiveBindings
 , setVar
 ) where
 
@@ -47,6 +48,11 @@ isBound envRef var =
 
 nullEnv :: IO Env
 nullEnv = IORef.newIORef []
+
+primitiveBindings :: IO Env
+primitiveBindings =
+    nullEnv >>= (flip Env.bindVars $ map makePrimitiveFunc primitives)
+    where makePrimitiveFunc (var, func) = (var, PrimitiveFunc func)
 
 setVar :: Env -> String -> LispVal -> IOThrowsError LispVal
 setVar envRef var value =

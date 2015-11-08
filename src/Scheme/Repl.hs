@@ -14,7 +14,7 @@ readPrompt prompt = flushStr prompt >> getLine
 
 runRepl :: IO ()
 runRepl =
-    Env.nullEnv >>= until_ (== "quit") (readPrompt "Lisp>>> ") . Interpreter.evalAndPrint
+    Env.primitiveBindings >>= until_ (== "quit") (readPrompt "Lisp>>> ") . Interpreter.evalAndPrint
 
 until_ :: Monad m => (a -> Bool) -> m a -> (a -> m ()) -> m ()
 until_ pred prompt action = do
