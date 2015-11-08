@@ -8,6 +8,7 @@ module Scheme.LispError
   , UnboundVar
   , Default
   )
+, extractValue
 , showError
 , ThrowsError
 , trapError
@@ -30,6 +31,9 @@ instance Show LispError where show = showError
 instance Error.Error LispError where
     noMsg = Default "An error has occured"
     strMsg = Default
+
+extractValue :: ThrowsError a -> a
+extractValue (Right val) = val
 
 showError :: LispError -> String
 showError (UnboundVar message varname) = message ++ ": " ++ varname

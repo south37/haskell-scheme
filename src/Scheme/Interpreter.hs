@@ -15,10 +15,7 @@ evalAndPrint expr = evalString expr >>= putStrLn
 evalString :: String -> IO String
 evalString expr =
     let evaled = readExpr expr >>= Evaluator.eval
-    in return $ extractValue $ LispError.trapError (Monad.liftM show evaled)
-
-extractValue :: LispError.ThrowsError a -> a
-extractValue (Right val) = val
+    in return $ LispError.extractValue $ LispError.trapError (Monad.liftM show evaled)
 
 readExpr :: String -> LispError.ThrowsError LispVal
 readExpr input = case Parsec.parse Parser.parseExpr "lisp" input of
