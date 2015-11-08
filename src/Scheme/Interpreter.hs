@@ -1,10 +1,6 @@
-module Scheme.Interpreter
-( evalAndPrint
-, runRepl
-) where
+module Scheme.Interpreter ( evalAndPrint ) where
 
 import qualified Text.ParserCombinators.Parsec as Parsec
-import qualified System.IO as IO
 import qualified Control.Monad as Monad
 import qualified Control.Monad.Error as Error
 
@@ -24,24 +20,8 @@ evalString expr =
 extractValue :: LispError.ThrowsError a -> a
 extractValue (Right val) = val
 
-flushStr :: String -> IO ()
-flushStr str = IO.putStr str >> IO.hFlush IO.stdout
-
 readExpr :: String -> LispError.ThrowsError LispVal
 readExpr input = case Parsec.parse Parser.parseExpr "lisp" input of
     Left err -> Error.throwError $ LispError.Parser err
     Right val -> return val
-
-readPrompt :: String -> IO String
-readPrompt prompt = flushStr prompt >> getLine
-
-runRepl :: IO ()
-runRepl = until_ (== "quit") (readPrompt "Lisp>>> ") evalAndPrint
-
-until_ :: Monad m => (a -> Bool) -> m a -> (a -> m ()) -> m ()
-until_ pred prompt action = do
-    result <- prompt
-    if pred result
-        then return ()
-        else action result >> until_ pred prompt action
 
