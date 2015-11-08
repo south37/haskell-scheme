@@ -8,26 +8,26 @@ module Scheme.Evaluator.Binop
 
 import qualified Control.Monad.Error as Error
 import qualified Scheme.LispError as LispError
-import qualified Scheme.LispVal as LispVal
-import           Scheme.LispVal (LispVal)
 import qualified Scheme.Evaluator.Unpacker as Unpacker
+import qualified Scheme.Type as Type
+import           Scheme.Type (LispVal)
 
 numericBinop :: (Integer -> Integer -> Integer)
-                -> [LispVal] -> LispError.ThrowsError LispVal
-numericBinop op singleVal@[_] = Error.throwError $ LispError.NumArgs 2 singleVal
+                -> [LispVal] -> Type.ThrowsError LispVal
+numericBinop op singleVal@[_] = Error.throwError $ Type.NumArgs 2 singleVal
 numericBinop op params =
-    mapM Unpacker.unpackNum params >>= return . LispVal.Number . foldl1 op
+    mapM Unpacker.unpackNum params >>= return . Type.Number . foldl1 op
 
 
 -- BoolBinop
 --------------------------------------------------------------------------------
-boolBinop :: (LispVal -> LispError.ThrowsError a)
-             -> (a -> a -> Bool) -> [LispVal] -> LispError.ThrowsError LispVal
+boolBinop :: (LispVal -> Type.ThrowsError a)
+             -> (a -> a -> Bool) -> [LispVal] -> Type.ThrowsError LispVal
 boolBinop unpacker op args = if length args /= 2
-                             then Error.throwError $ LispError.NumArgs 2 args
+                             then Error.throwError $ Type.NumArgs 2 args
                              else do left <- unpacker $ args !! 0
                                      right <- unpacker $ args !! 1
-                                     return $ LispVal.Bool $ left `op` right
+                                     return $ Type.Bool $ left `op` right
 numBoolBinop = boolBinop Unpacker.unpackNum
 boolBoolBinop = boolBinop Unpacker.unpackBool
 strBoolBinop = boolBinop Unpacker.unpackStr

@@ -1,5 +1,5 @@
 module Scheme.Env
-( Env
+( bindVars
 , defineVar
 , getVar
 , nullEnv
@@ -10,11 +10,10 @@ module Scheme.Env
 import qualified Control.Monad as Monad
 import qualified Control.Monad.Error as Error
 import qualified Data.IORef as IORef
+import qualified Scheme.Evaluator.Primitives as Primitives
 import           Scheme.IOThrowsError (IOThrowsError)
-import qualified Scheme.LispError as LispError
-import           Scheme.LispVal (LispVal)
-
-type Env = IORef.IORef [(String, IORef.IORef LispVal)]
+import qualified Scheme.Type as Type
+import           Scheme.Type (Env, LispVal)
 
 bindVars :: Env -> [(String, LispVal)] -> IO Env
 bindVars envRef bindings =
@@ -37,7 +36,7 @@ defineVar envRef var value =
 getVar :: Env -> String -> IOThrowsError LispVal
 getVar envRef var =
     do env <- Error.liftIO $ IORef.readIORef envRef
-       maybe (Error.throwError $ LispError.UnboundVar "Getting an unbound variable: " var)
+       maybe (Error.throwError $ Type.UnboundVar "Getting an unbound variable: " var)
              (Error.liftIO . IORef.readIORef)
              (lookup var env)
 
@@ -51,13 +50,13 @@ nullEnv = IORef.newIORef []
 
 primitiveBindings :: IO Env
 primitiveBindings =
-    nullEnv >>= (flip Env.bindVars $ map makePrimitiveFunc primitives)
-    where makePrimitiveFunc (var, func) = (var, PrimitiveFunc func)
+    nullEnv >>= (flip bindVars $ map makePrimitiveFunc Primitives.primitives)
+    where makePrimitiveFunc (var, func) = (var, Type.PrimitiveFunc func)
 
 setVar :: Env -> String -> LispVal -> IOThrowsError LispVal
 setVar envRef var value =
     do env <- Error.liftIO $ IORef.readIORef envRef
-       maybe (Error.throwError $ LispError.UnboundVar "Setting an unbound variable: " var)
+       maybe (Error.throwError $ Type.UnboundVar "Setting an unbound variable: " var)
              (Error.liftIO . (flip IORef.writeIORef value))
              (lookup var env)
        return value

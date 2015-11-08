@@ -21,8 +21,8 @@ import           Text.ParserCombinators.Parsec
                  , string
                  , try
                  , (<|>))
-import qualified Scheme.LispVal as LispVal
-import           Scheme.LispVal (LispVal)
+import qualified Scheme.Type as Type
+import           Scheme.Type (LispVal)
 
 parseExpr :: Parser LispVal
 parseExpr = parseAtom
@@ -43,45 +43,45 @@ parseExpr = parseAtom
 parseAtom :: Parser LispVal
 parseAtom = do first <- letter <|> symbol
                rest <- many (letter <|> digit <|> symbol)
-               return $ LispVal.Atom (first:rest)
+               return $ Type.Atom (first:rest)
 
 parseFloat :: Parser LispVal
 parseFloat = try $ do x <- many1 digit
                       dot <- char '.'
                       y <- many1 digit
-                      return $ LispVal.Float (fst $ Numeric.readFloat (x ++ [dot] ++ y) !! 0)
+                      return $ Type.Float (fst $ Numeric.readFloat (x ++ [dot] ++ y) !! 0)
 
 parseNumber :: Parser LispVal
 parseNumber =
     do prefix <- (try $ char '#' >> oneOf "box") <|> digit
        case prefix of
          'b' -> do numberStr <- many1 $ oneOf "01"
-                   return $ LispVal.Number (bin2dig numberStr)
+                   return $ Type.Number (bin2dig numberStr)
          'o' -> do numberStr <- many1 $ oneOf "01234567"
-                   return $ LispVal.Number (fst $ (Numeric.readOct numberStr) !! 0)
+                   return $ Type.Number (fst $ (Numeric.readOct numberStr) !! 0)
          'x' -> do numberStr <- many1 $ oneOf "0123456789abcde"
-                   return $ LispVal.Number (fst $ (Numeric.readHex numberStr) !! 0)
+                   return $ Type.Number (fst $ (Numeric.readHex numberStr) !! 0)
          _   -> do numberStr <- many digit
-                   return $ LispVal.Number (read $ prefix:numberStr)
+                   return $ Type.Number (read $ prefix:numberStr)
 
 parseString :: Parser LispVal
 parseString = do char '"'
                  x <- many (escapedChars <|> noneOf "\"")
                  char '"'
-                 return $ LispVal.String x
+                 return $ Type.String x
 
 parseBool :: Parser LispVal
 parseBool = do x <- try $ char '#' >> oneOf "tf"
                case x of
-                 't' -> return $ LispVal.Bool True
-                 'f' -> return $ LispVal.Bool False
+                 't' -> return $ Type.Bool True
+                 'f' -> return $ Type.Bool False
 
 parseChar :: Parser LispVal
 parseChar = do
     try $ string "#\\"
     value <- spetialChars
              <|> do { x <- anyChar; notFollowedBy alphaNum; return [x] }
-    return $ LispVal.Character $ case value of
+    return $ Type.Character $ case value of
                       "altmode"   -> '\ESC'
                       "backnext"  -> '\US'
                       "backspace" -> '\BS'
@@ -132,15 +132,15 @@ parseQuoted :: Parser LispVal
 parseQuoted = do
     char '\''
     x <- parseExpr
-    return $ LispVal.List [LispVal.Atom "quote", x]
+    return $ Type.List [Type.Atom "quote", x]
 
 parseList :: Parser LispVal
-parseList = Monad.liftM LispVal.List $ try $ sepBy parseExpr spaces
+parseList = Monad.liftM Type.List $ try $ sepBy parseExpr spaces
 
 parseDottedList :: Parser LispVal
 parseDottedList = do head <- endBy parseExpr spaces
                      tail <- char '.' >> spaces >> parseExpr
-                     return $ LispVal.DottedList head tail
+                     return $ Type.DottedList head tail
 
 
 -- Util

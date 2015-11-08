@@ -1,13 +1,12 @@
 module Scheme.Evaluator.Primitives ( primitives ) where
 
-import qualified Scheme.LispError as LispError
-import           Scheme.LispVal (LispVal)
-import qualified Scheme.Env as Env
 import qualified Scheme.Evaluator.Binop as Binop
 import qualified Scheme.Evaluator.ListFunction as ListFunction
 import qualified Scheme.Evaluator.EqualFunction as EqualFunction
+import qualified Scheme.Type as Type
+import           Scheme.Type (LispVal)
 
-primitives :: [(String, [LispVal] -> LispError.ThrowsError LispVal)]
+primitives :: [(String, [LispVal] -> Type.ThrowsError LispVal)]
 primitives = [("+", Binop.numericBinop (+)),
               ("-", Binop.numericBinop (-)),
               ("*", Binop.numericBinop (*)),
